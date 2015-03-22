@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Reeminders
+*/
+
+"app_name" = "REEM";
+
+"model_data_loading" = "Loading items";
+"model_data_loading_finished" = "Items loaded";
+
+"nav_bar_title_today" = "Today";
+"nav_bar_title_later" = "Later";
+"nav_bar_title_tags" = "Tags";

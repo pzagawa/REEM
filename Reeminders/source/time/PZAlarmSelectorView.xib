@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" id="iN0-l3-epB" customClass="PZAlarmSelectorView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CRo-s8-Wkr" userLabel="Main View">
+                    <rect key="frame" x="10" y="118" width="300" height="302"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vl0-ZU-mCO" userLabel="titleLabel">
+                            <rect key="frame" x="10" y="8" width="280" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.37861540913581848" green="0.2347540408372879" blue="0.11943463981151581" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MEL-D3-jDA" userLabel="alarmSwitch">
+                            <rect key="frame" x="126" y="43" width="51" height="31"/>
+                            <color key="onTintColor" red="0.85773026315789469" green="0.71669147545511414" blue="0.58475196394563711" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="thumbTintColor" red="1" green="0.98533871299342102" blue="0.97067742598684215" alpha="1" colorSpace="deviceRGB"/>
+                            <connections>
+                                <action selector="onAlarmSwitchChange:" destination="iN0-l3-epB" eventType="valueChanged" id="BF1-gW-mQK"/>
+                            </connections>
+                        </switch>
+                        <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="5" translatesAutoresizingMaskIntoConstraints="NO" id="C3F-yx-3G6" userLabel="datePicker">
+                            <rect key="frame" x="0.0" y="82" width="300" height="162"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="162" id="t6o-UW-wHz"/>
+                            </constraints>
+                            <date key="date" timeIntervalSinceReferenceDate="437870073.42954898">
+                                <!--2014-11-16 22:34:33 +0000-->
+                            </date>
+                        </datePicker>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="alarm disabled" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzS-Jw-61l" userLabel="alarmDisabledLabel">
+                            <rect key="frame" x="10" y="153" width="280" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.37861540910000002" green="0.23475404080000001" blue="0.11943463980000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvW-TA-LCm" userLabel="doneButton">
+                            <rect key="frame" x="105" y="258" width="90" height="30"/>
+                            <color key="backgroundColor" red="0.85773026320000001" green="0.71669147550000001" blue="0.58475196389999995" alpha="1" colorSpace="deviceRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="90" id="3xK-MO-1kJ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                            <state key="normal" title="Done">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="onTapDoneButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="F7v-GO-F9w"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.99862563610076904" green="0.93970370292663574" blue="0.87923681735992432" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Vl0-ZU-mCO" secondAttribute="trailing" constant="10" id="1Jy-f3-22V"/>
+                        <constraint firstItem="C3F-yx-3G6" firstAttribute="centerY" secondItem="dzS-Jw-61l" secondAttribute="centerY" id="4Ko-jN-ciC"/>
+                        <constraint firstItem="MEL-D3-jDA" firstAttribute="top" secondItem="Vl0-ZU-mCO" secondAttribute="bottom" constant="14" id="5zS-d9-Q1b"/>
+                        <constraint firstAttribute="trailing" secondItem="C3F-yx-3G6" secondAttribute="trailing" id="72e-35-v65"/>
+                        <constraint firstItem="C3F-yx-3G6" firstAttribute="top" secondItem="MEL-D3-jDA" secondAttribute="bottom" constant="8" id="8IS-85-pdo"/>
+                        <constraint firstItem="dzS-Jw-61l" firstAttribute="leading" secondItem="CRo-s8-Wkr" secondAttribute="leading" constant="10" id="C7v-4K-rAo"/>
+                        <constraint firstAttribute="trailing" secondItem="dzS-Jw-61l" secondAttribute="trailing" constant="10" id="J3J-ne-aW2"/>
+                        <constraint firstAttribute="centerX" secondItem="MEL-D3-jDA" secondAttribute="centerX" id="K2L-RC-p5Q"/>
+                        <constraint firstAttribute="centerX" secondItem="cvW-TA-LCm" secondAttribute="centerX" id="K9O-Vn-R7x"/>
+                        <constraint firstItem="C3F-yx-3G6" firstAttribute="leading" secondItem="CRo-s8-Wkr" secondAttribute="leading" id="Rae-vq-ABx"/>
+                        <constraint firstAttribute="height" constant="302" id="RwN-We-Goq"/>
+                        <constraint firstItem="Vl0-ZU-mCO" firstAttribute="top" secondItem="CRo-s8-Wkr" secondAttribute="top" constant="8" id="dIt-ZH-14P"/>
+                        <constraint firstItem="Vl0-ZU-mCO" firstAttribute="leading" secondItem="CRo-s8-Wkr" secondAttribute="leading" constant="10" id="g1f-mF-Zde"/>
+                        <constraint firstAttribute="bottom" secondItem="cvW-TA-LCm" secondAttribute="bottom" constant="14" id="p7c-fi-wQL"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="CRo-s8-Wkr" secondAttribute="trailing" constant="10" id="S2y-8N-ed4"/>
+                <constraint firstAttribute="bottom" secondItem="CRo-s8-Wkr" secondAttribute="bottom" constant="60" id="TTD-XO-Ouy"/>
+                <constraint firstItem="CRo-s8-Wkr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="UW5-Tn-7ks"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="alarmDisabledLabel" destination="dzS-Jw-61l" id="WWH-q5-5C3"/>
+                <outlet property="alarmSwitch" destination="MEL-D3-jDA" id="Hw4-De-D0C"/>
+                <outlet property="datePicker" destination="C3F-yx-3G6" id="EaF-IV-e1g"/>
+                <outlet property="mainView" destination="CRo-s8-Wkr" id="cno-l1-JBz"/>
+                <outlet property="titleLabel" destination="Vl0-ZU-mCO" id="XX8-JI-c3r"/>
+            </connections>
+            <point key="canvasLocation" x="1077" y="455"/>
+        </view>
+    </objects>
+</document>
