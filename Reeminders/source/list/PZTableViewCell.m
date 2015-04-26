@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, PZCellSwipeState)
     
     [self setLeftActionIconLayer];
     
-    [self setupShadowLayers];
+    [self createShadowLayers];
     
     [self setupGestureRecognizers];
 }
@@ -331,31 +331,39 @@ typedef NS_ENUM(NSInteger, PZCellSwipeState)
     return (self.actionButtonSize * actionButtons.count);
 }
 
-- (void)setupShadowLayers
+- (void)createShadowLayers
 {
-    CGFloat edge = 24;
-    
-    CGRect rect = self.contentView.bounds;
-    
     CALayer *layerEdgeL = [CALayer layer];
     CALayer *layerEdgeR = [CALayer layer];
     CALayer *layerEdgeT = [CALayer layer];
     CALayer *layerEdgeB = [CALayer layer];
 
-    layerEdgeL.frame = CGRectMake(-edge, 0, edge, rect.size.height);
-    layerEdgeR.frame = CGRectMake(rect.size.width, 0, edge, rect.size.height);
-    layerEdgeT.frame = CGRectMake(0, -edge, rect.size.width, edge);
-    layerEdgeB.frame = CGRectMake(0, rect.size.height, rect.size.width, edge);
-
     [self.contentView.layer addSublayer:layerEdgeL];
     [self.contentView.layer addSublayer:layerEdgeR];
     [self.contentView.layer addSublayer:layerEdgeT];
     [self.contentView.layer addSublayer:layerEdgeB];
-    
+
     self.layerEdgeL = layerEdgeL;
     self.layerEdgeR = layerEdgeR;
     self.layerEdgeT = layerEdgeT;
     self.layerEdgeB = layerEdgeB;
+}
+
+- (void)updateShadowLayers
+{
+    CGFloat edge = 24;
+
+    CGRect rect = self.contentView.bounds;
+
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+
+    self.layerEdgeL.frame = CGRectMake(-edge, 0, edge, rect.size.height);
+    self.layerEdgeR.frame = CGRectMake(rect.size.width, 0, edge, rect.size.height);
+    self.layerEdgeT.frame = CGRectMake(0, -edge, rect.size.width, edge);
+    self.layerEdgeB.frame = CGRectMake(0, rect.size.height, rect.size.width, edge);
+
+    [CATransaction commit];
 }
 
 - (void)setShadowEnabled:(BOOL)enabled
@@ -368,7 +376,9 @@ typedef NS_ENUM(NSInteger, PZCellSwipeState)
         }
         
         self.isShadowEnabled = YES;
-        
+
+        [self updateShadowLayers];
+
         [self setShadowToLayer:self.layerEdgeL];
         [self setShadowToLayer:self.layerEdgeR];
         [self setShadowToLayer:self.layerEdgeT];
