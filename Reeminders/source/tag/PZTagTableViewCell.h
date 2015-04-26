@@ -12,10 +12,6 @@
 
 @interface PZTagTableViewCell : PZTableViewCell
 
-@property (weak, nonatomic) IBOutlet UIView *swipeView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *layConstSwipeViewL;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *layConstSwipeViewR;
-
 @property PZTagItem *dataItem;
 
 @end
