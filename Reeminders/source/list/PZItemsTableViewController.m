@@ -51,7 +51,9 @@
     
     [self.cellRightActionButtonDelete addTarget:self action:@selector(onTapCellRightActionButtonDelete:) forControlEvents:UIControlEventTouchUpInside];
     [self.cellRightActionButtonSetTime addTarget:self action:@selector(onTapCellRightActionButtonSetTime:) forControlEvents:UIControlEventTouchUpInside];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onModelNotification:) name:NOTIFICATION_MODEL_EVENT_STORE_INITIALIZED object:self];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onModelEventStoreFetchingFinishedNotification:) name:NOTIFICATION_MODEL_EVENT_STORE_FETCHING_FINISHED object:nil];
 }
 
@@ -65,6 +67,16 @@
 - (PZDataListItemsType)listItemsType
 {
     return -1;
+}
+
+#pragma mark Event when model data update
+
+- (void)onModelNotification:(NSNotification *)notification
+{
+    if ([notification.name isEqual:NOTIFICATION_MODEL_EVENT_STORE_INITIALIZED])
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onModelEventStoreFetchingFinishedNotification:) name:NOTIFICATION_MODEL_EVENT_STORE_FETCHING_FINISHED object:nil];
+    }
 }
 
 #pragma mark TableView

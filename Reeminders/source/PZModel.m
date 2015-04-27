@@ -38,9 +38,10 @@ static PZModel *model = nil;
     
     if (self)
     {
-        self->_eventStore = [[EKEventStore alloc] init];
         self->_eventStoreLock = [NSObject new];
-        
+
+        [self recreateEventStore];
+
         self->_operationQueue = [[NSOperationQueue alloc] init];
         
         self.operationQueue.maxConcurrentOperationCount = 1;
@@ -48,8 +49,7 @@ static PZModel *model = nil;
         self.ekCalendars = @[];
         
         self->_tagsAll = [[PZTagsList alloc] init];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEventStoreNotification:) name:EKEventStoreChangedNotification object:self.eventStore];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onModelNotification:) name:NOTIFICATION_MODEL_EVENT_STORE_INITIALIZED object:self];
     }
     
@@ -83,6 +83,19 @@ static PZModel *model = nil;
     }
 }
 
+//recreate event store (to avoid EKCADErrorDomain error 1013)
+- (void)recreateEventStore
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:EKEventStoreChangedNotification object:self.eventStore];
+
+    @synchronized(self->_eventStoreLock)
+    {
+        self->_eventStore = [[EKEventStore alloc] init];
+    }
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEventStoreNotification:) name:EKEventStoreChangedNotification object:self.eventStore];
+}
+
 - (void)initializeEventStore:(PZEventStoreInitializeCompletionBlock)completionBlock
 {
     NSLog(@"[PZModel] initializeEventStore..");
@@ -94,11 +107,7 @@ static PZModel *model = nil;
 
         if (granted)
         {
-            //reinitialize event store (to avoid EKCADErrorDomain error 1013)
-            @synchronized(self->_eventStoreLock)
-            {
-                self->_eventStore = [[EKEventStore alloc] init];
-            }
+            [self recreateEventStore];
         }
         
         NSLog(@"[PZModel] event store initialized (access granted: %@, error: %@)", (granted ? @"Y" : @"N"), error);
@@ -128,7 +137,7 @@ static PZModel *model = nil;
     }
 }
 
-#pragma mark Event when event store data change
+#pragma mark Event when store data change
 
 - (void)onEventStoreNotification:(NSNotification *)notification
 {
