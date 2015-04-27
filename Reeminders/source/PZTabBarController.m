@@ -33,7 +33,7 @@
 {
     [super viewDidLoad];
     
-    self->_remindersToday = [[PZRemindersTodayList alloc] initWithEventStore:[PZModel instance].eventStore];
+    self->_remindersToday = [[PZRemindersTodayList alloc] init];
     
     //set icons tint color
     self.tabBar.selectedImageTintColor = [UIColor colorWithRed:0.2 green:0.1 blue:0.0 alpha:1.0];
@@ -45,12 +45,18 @@
     {
         NSLog(@"[PZTabBarController] viewDidLoad - event store initialization completed");
         
-        if (granted == NO)
+        if (granted)
+        {
+            NSLog(@"[PZTabBarController] access granted, fetching tags..");
+
+            [[PZModel instance] fetchTags];
+        }
+        else
         {
             [[NSOperationQueue mainQueue] addOperation:[NSBlockOperation blockOperationWithBlock:^
             {
                 NSString *message = @"REEM can't read or manage your reminders.\nYou can enable access to reminders in settings.";
-                
+
                 [[[UIAlertView alloc] initWithTitle:@"No access to reminders" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             }]];
         }

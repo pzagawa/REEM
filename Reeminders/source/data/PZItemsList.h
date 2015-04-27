@@ -15,15 +15,13 @@ typedef void (^PZItemsFetchCompletionBlock) ();
 
 @interface PZItemsList : NSObject
 
-@property (weak, readonly) EKEventStore *eventStore;
+@property (readonly) EKEventStore *eventStore;
 
 @property (readonly) NSOperationQueue *operationQueue;
 
 @property (readonly) BOOL isEventStoreAccessAuthorized;
 
 @property (readonly) PZDataItemType itemType;
-
-- (instancetype)initWithEventStore:(EKEventStore *)eventStore;
 
 - (NSArray *)map:(NSMutableDictionary *)map reminderItemsFromEkReminders:(NSArray *)ekReminders;
 - (NSArray *)map:(NSMutableDictionary *)map reminderItemsFromEkReminders:(NSArray *)ekReminders withCompletedState:(BOOL)isCompleted;

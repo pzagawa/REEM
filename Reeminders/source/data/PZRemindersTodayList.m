@@ -21,10 +21,10 @@
     NSArray *_ekRemindersDone;
 }
 
-- (instancetype)initWithEventStore:(EKEventStore *)eventStore
+- (instancetype)init
 {
-    self = [super initWithEventStore:eventStore];
-    
+    self = [super init];
+
     if (self)
     {
         self->_map = [NSMutableDictionary new];

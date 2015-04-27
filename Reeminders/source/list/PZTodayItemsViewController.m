@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     
-    self->_remindersToday = [[PZRemindersTodayList alloc] initWithEventStore:self.model.eventStore];
+    self->_remindersToday = [[PZRemindersTodayList alloc] init];
 }
 
 - (void)didReceiveMemoryWarning

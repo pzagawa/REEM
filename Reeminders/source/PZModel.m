@@ -27,6 +27,8 @@ static PZModel *model = nil;
 
 @implementation PZModel
 {
+    EKEventStore *_eventStore;
+    NSObject *_eventStoreLock;
     PZTagItem *_defaultTagItem;
 }
 
@@ -37,6 +39,7 @@ static PZModel *model = nil;
     if (self)
     {
         self->_eventStore = [[EKEventStore alloc] init];
+        self->_eventStoreLock = [NSObject new];
         
         self->_operationQueue = [[NSOperationQueue alloc] init];
         
@@ -44,7 +47,7 @@ static PZModel *model = nil;
 
         self.ekCalendars = @[];
         
-        self->_tagsAll = [[PZTagsList alloc] initWithEventStore:self.eventStore];
+        self->_tagsAll = [[PZTagsList alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEventStoreNotification:) name:EKEventStoreChangedNotification object:self.eventStore];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onModelNotification:) name:NOTIFICATION_MODEL_EVENT_STORE_INITIALIZED object:self];
@@ -60,12 +63,24 @@ static PZModel *model = nil;
 
 + (void)createInstance
 {
-    model = [PZModel new];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        model = [PZModel new];
+    });
 }
 
 + (PZModel *)instance
 {
     return model;
+}
+
+- (EKEventStore *)eventStore
+{
+    @synchronized(self->_eventStoreLock)
+    {
+        return self->_eventStore;
+    }
 }
 
 - (void)initializeEventStore:(PZEventStoreInitializeCompletionBlock)completionBlock
@@ -76,13 +91,22 @@ static PZModel *model = nil;
     {
         self->_isEventStoreAccessGranted = granted;
         self->_eventStoreAccessError = [error copy];
+
+        if (granted)
+        {
+            //reinitialize event store (to avoid EKCADErrorDomain error 1013)
+            @synchronized(self->_eventStoreLock)
+            {
+                self->_eventStore = [[EKEventStore alloc] init];
+            }
+        }
         
         NSLog(@"[PZModel] event store initialized (access granted: %@, error: %@)", (granted ? @"Y" : @"N"), error);
-        
+
         NSDictionary *userInfo = @{ @"granted": @(granted) };
         
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MODEL_EVENT_STORE_INITIALIZED object:self userInfo:userInfo];
-        
+
         completionBlock(granted, error);
     }];
 }

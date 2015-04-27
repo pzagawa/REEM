@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Piotr Zagawa. All rights reserved.
 //
 
+#import "PZModel.h"
 #import "PZItemsList.h"
 #import "PZTagItem.h"
 #import "PZReminderItem.h"
@@ -17,21 +18,16 @@
 
 @end
 
-@implementation PZItemsList
-{
-    __weak EKEventStore *_eventStore;
-}
+static NSOperationQueue *commonOperationQueue;
 
-- (instancetype)initWithEventStore:(EKEventStore *)eventStore
+@implementation PZItemsList
+
+- (instancetype)init
 {
     self = [super init];
 
     if (self)
     {
-        self->_eventStore = eventStore;
-        
-        self->_operationQueue = [[NSOperationQueue alloc] init];
-        
         self->_calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 
         self->_calendarUnits = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute);
@@ -40,9 +36,22 @@
     return self;
 }
 
+- (NSOperationQueue *)operationQueue
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        commonOperationQueue = [NSOperationQueue new];
+
+        commonOperationQueue.maxConcurrentOperationCount = 1;
+    });
+
+    return commonOperationQueue;
+}
+
 - (EKEventStore *)eventStore
 {
-    return self->_eventStore;
+    return [[PZModel instance] eventStore];
 }
 
 - (BOOL)isEventStoreAccessAuthorized

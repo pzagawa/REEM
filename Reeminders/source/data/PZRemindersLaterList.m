@@ -22,9 +22,9 @@
     NSArray *_ekRemindersAfterTomorrow;
 }
 
-- (instancetype)initWithEventStore:(EKEventStore *)eventStore
+- (instancetype)init
 {
-    self = [super initWithEventStore:eventStore];
+    self = [super init];
     
     if (self)
     {

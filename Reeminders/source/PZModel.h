@@ -42,4 +42,6 @@ typedef void (^PZEventStoreInitializeCompletionBlock) (BOOL granted, NSError *er
 - (EKCalendar *)createNewCalendarItem;
 - (EKReminder *)createNewReminderItem;
 
+- (void)fetchTags;
+
 @end

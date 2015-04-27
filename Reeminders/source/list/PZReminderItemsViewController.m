@@ -28,7 +28,7 @@
 {
     [super viewDidLoad];
     
-    self->_reminders = [[PZRemindersList alloc] initWithEventStore:self.model.eventStore];
+    self->_reminders = [[PZRemindersList alloc] init];
     
     self.navigationItem.title = self.tagItem.name;
 }

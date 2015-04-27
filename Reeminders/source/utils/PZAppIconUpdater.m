@@ -39,7 +39,7 @@
 
 + (void)updateBadgeNumberWithCompletion:(PZAppIconUpdateCompletionBlock)completionBlock
 {
-    PZRemindersTodayList *remindersToday = [[PZRemindersTodayList alloc] initWithEventStore:[PZModel instance].eventStore];
+    PZRemindersTodayList *remindersToday = [[PZRemindersTodayList alloc] init];
 
     __weak PZRemindersTodayList *this = remindersToday;
     

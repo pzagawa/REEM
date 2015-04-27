@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
     
-    self->_tags = [[PZTagsList alloc] initWithEventStore:self.model.eventStore];
+    self->_tags = [[PZTagsList alloc] init];
     
     self->_alertView = [[UIAlertView alloc ] initWithTitle:@"Do you want to remove" message:@"tag with all reminders?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"YES, remove it!", nil];
     

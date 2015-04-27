@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
         
-    self->_remindersLater = [[PZRemindersLaterList alloc] initWithEventStore:self.model.eventStore];
+    self->_remindersLater = [[PZRemindersLaterList alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
