@@ -159,19 +159,8 @@ typedef void (^PZReminderEditAnimationCompletionBlock) ();
 
 - (void)resignFirstResponderFromAllPages
 {
-    if (self.pageSelector.selectedSegmentIndex == 0)
-    {
-        [self.editTitle resignFirstResponder];
-    }
-    
-    if (self.pageSelector.selectedSegmentIndex == 1)
-    {
-    }
-    
-    if (self.pageSelector.selectedSegmentIndex == 2)
-    {
-        [self.noteEdit resignFirstResponder];
-    }
+    [self.editTitle resignFirstResponder];
+    [self.noteEdit resignFirstResponder];
 }
 
 - (void)becomeFirstResponderOnActivePage
