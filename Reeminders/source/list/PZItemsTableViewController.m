@@ -13,6 +13,7 @@
 #import "PZReminderTableViewCell.h"
 #import "PZReminderEditViewController.h"
 #import "PZTagEditViewController.h"
+#import "PZNavigationController.h"
 
 @interface PZItemsTableViewController ()
 
@@ -21,6 +22,8 @@
 @property (readonly) NSCalendarUnit calendarUnits;
 
 @property NSValue *savedScrollOffsetPoint;
+
+@property PZAlarmSelectorView *alarmSelector;
 
 @end
 
@@ -294,13 +297,21 @@
 
 - (void)showAlarmSelectorForReminderCell:(PZReminderTableViewCell *)reminderCell
 {
-    [PZAlarmSelectorView showForReminderItem:reminderCell.dataItem withCompletion:^(NSDate *time, BOOL isCanceled)
+    __weak PZItemsTableViewController *selfWeakRef = self;
+
+    UIViewController *viewController = self.navigationController;
+
+    self.alarmSelector = [PZAlarmSelectorView instanceWithViewController:viewController];
+
+    [self.alarmSelector showForReminderItem:reminderCell.dataItem withCompletion:^(NSDate *time, BOOL isCanceled)
     {
+        selfWeakRef.alarmSelector = nil;
+
         if (isCanceled)
         {
             [reminderCell.dataItem rollback];
 
-            [self scrollSwipeViewCellsBackExcept:nil];
+            [selfWeakRef scrollSwipeViewCellsBackExcept:nil];
             return;
         }
 
@@ -308,11 +319,11 @@
         
         [reminderCell.dataItem saveItem];
 
-        [self scrollSwipeViewCellsBackExcept:nil];
+        [selfWeakRef scrollSwipeViewCellsBackExcept:nil];
 
         [PZUtils delaySeconds:0.3 withCompletionBlock:^
         {
-            [self.model.eventStore commit:nil];
+            [selfWeakRef.model.eventStore commit:nil];
         }];
     }];
 }

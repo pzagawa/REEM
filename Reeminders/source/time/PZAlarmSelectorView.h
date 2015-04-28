@@ -15,8 +15,6 @@ typedef void (^PZAlarmSelectorViewCompletionBlock)(NSDate *time, BOOL isCanceled
 
 + (PZAlarmSelectorView *)instanceWithViewController:(UIViewController *)viewController;
 
-- (void)addToParentView:(UIView *)parentView;
-
-+ (void)showForReminderItem:(PZReminderItem *)reminderItem withCompletion:(PZAlarmSelectorViewCompletionBlock)completionBlock;
+- (void)showForReminderItem:(PZReminderItem *)reminderItem withCompletion:(PZAlarmSelectorViewCompletionBlock)completionBlock;
 
 @end

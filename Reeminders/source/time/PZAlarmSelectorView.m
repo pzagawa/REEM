@@ -8,8 +8,6 @@
 
 #import "PZAlarmSelectorView.h"
 
-__weak static PZAlarmSelectorView *this = nil;
-
 @interface PZAlarmSelectorView ()
 
 @property (weak) UIViewController *parentViewController;
@@ -27,6 +25,8 @@ __weak static PZAlarmSelectorView *this = nil;
 
 @property NSDate *selectedTime;
 
+@property (weak) UITapGestureRecognizer *singleTapGestureRecognizer;
+
 @end
 
 @implementation PZAlarmSelectorView
@@ -38,10 +38,15 @@ __weak static PZAlarmSelectorView *this = nil;
     PZAlarmSelectorView *view = [nibContents lastObject];
         
     [view initializeWithViewController:viewController];
-    
-    this = view;
-    
+
+    [view addToParentView:viewController.view];
+
     return view;
+}
+
+- (void)dealloc
+{
+    self.completionBlock = nil;
 }
 
 - (void)initializeWithViewController:(UIViewController *)viewController
@@ -59,6 +64,8 @@ __weak static PZAlarmSelectorView *this = nil;
     
     singleTapGestureRecognizer.numberOfTapsRequired = 1;
     singleTapGestureRecognizer.numberOfTouchesRequired = 1;
+
+    self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
     [self addGestureRecognizer:singleTapGestureRecognizer];
 }
@@ -93,6 +100,8 @@ __weak static PZAlarmSelectorView *this = nil;
 
 - (void)setWithAnimationDatePickerEnabled:(BOOL)enabled
 {
+    __weak PZAlarmSelectorView *selfWeakRef = self;
+
     self.datePicker.enabled = enabled;
     self.datePicker.userInteractionEnabled = enabled;
     
@@ -100,19 +109,19 @@ __weak static PZAlarmSelectorView *this = nil;
     {
         if (enabled)
         {
-            self.datePicker.alpha = 1;
-            self.alarmDisabledLabel.alpha = 0;
+            selfWeakRef.datePicker.alpha = 1;
+            selfWeakRef.alarmDisabledLabel.alpha = 0;
         }
         else
         {
-            self.datePicker.alpha = 0;
-            self.alarmDisabledLabel.alpha = 1;
+            selfWeakRef.datePicker.alpha = 0;
+            selfWeakRef.alarmDisabledLabel.alpha = 1;
         }
     }
     completion:^(BOOL finished)
     {
-        self.datePicker.hidden = !enabled;
-        self.alarmDisabledLabel.hidden = enabled;
+        selfWeakRef.datePicker.hidden = !enabled;
+        selfWeakRef.alarmDisabledLabel.hidden = enabled;
     }];
 }
 
@@ -139,28 +148,41 @@ __weak static PZAlarmSelectorView *this = nil;
 
 - (void)hideSelector
 {
+    __weak PZAlarmSelectorView *selfWeakRef = self;
+
     [UIView animateWithDuration:0.2 animations:^
     {
-        this.alpha = 0;
+        selfWeakRef.alpha = 0;
     }
     completion:^(BOOL finished)
     {
-        self.hidden = YES;
+        selfWeakRef.hidden = YES;
+
+        [selfWeakRef cleanup];
     }];
+}
+
+- (void)cleanup
+{
+    [self removeGestureRecognizer:self.singleTapGestureRecognizer];
+
+    [self removeFromSuperview];
 }
 
 - (void)showSelector
 {
-    NSLog(@"[PZAlarmSelectorView] showForReminderItem:%@", this.reminderItem);
+    __weak PZAlarmSelectorView *selfWeakRef = self;
+
+    NSLog(@"[PZAlarmSelectorView] showForReminderItem:%@", self.reminderItem);
 
     [self updateStateWithData];
     
-    this.alpha = 0;
-    this.hidden = NO;
+    self.alpha = 0;
+    self.hidden = NO;
     
-    [UIView animateWithDuration:0.2 animations:^
+    [UIView animateWithDuration:0.1 animations:^
     {
-        this.alpha = 1;
+        selfWeakRef.alpha = 1;
     }];
 }
 
@@ -170,14 +192,14 @@ __weak static PZAlarmSelectorView *this = nil;
     
     if (self.reminderItem.alarmDate == nil)
     {
-        [this setDatePickerEnabled:NO];
+        [self setDatePickerEnabled:NO];
         [self.alarmSwitch setOn:NO];
 
         self.selectedTime = nil;
     }
     else
     {
-        [this setDatePickerEnabled:YES];
+        [self setDatePickerEnabled:YES];
         [self.alarmSwitch setOn:YES];
         
         NSLog(@"[PZAlarmSelectorView] updateStateWithData: %@", self.reminderItem.alarmDate);
@@ -227,15 +249,12 @@ __weak static PZAlarmSelectorView *this = nil;
     self.datePicker.date = [[NSCalendar currentCalendar] dateFromComponents:components];
 }
 
-+ (void)showForReminderItem:(PZReminderItem *)reminderItem withCompletion:(PZAlarmSelectorViewCompletionBlock)completionBlock
+- (void)showForReminderItem:(PZReminderItem *)reminderItem withCompletion:(PZAlarmSelectorViewCompletionBlock)completionBlock
 {
-    if (this != nil)
-    {
-        this.reminderItem = reminderItem;
-        this.completionBlock = completionBlock;
-        
-        [this showSelector];
-    }
+    self.reminderItem = reminderItem;
+    self.completionBlock = completionBlock;
+
+    [self showSelector];
 }
 
 - (void)onMainViewTap:(UITapGestureRecognizer *)recognizer

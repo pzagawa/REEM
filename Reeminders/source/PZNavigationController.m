@@ -7,11 +7,8 @@
 //
 
 #import "PZNavigationController.h"
-#import "PZAlarmSelectorView.h"
 
 @interface PZNavigationController ()
-
-@property (readonly) PZAlarmSelectorView *alarmSelectorView;
 
 @end
 
@@ -21,9 +18,10 @@
 {
     [super viewDidLoad];
  
-    self->_alarmSelectorView = [PZAlarmSelectorView instanceWithViewController:self];
-    
-    [self.alarmSelectorView addToParentView:self.view];
+}
+
+- (void)dealloc
+{
 }
 
 - (void)didReceiveMemoryWarning
