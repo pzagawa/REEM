@@ -12,8 +12,6 @@
 
 @interface PZRemindersList : PZItemsList
 
-@property NSArray *ekReminders;
-
 @property NSArray *itemsTodo;
 @property NSArray *itemsDone;
 

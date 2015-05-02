@@ -12,13 +12,10 @@
 
 @interface PZRemindersLaterList : PZItemsList
 
-@property NSArray *ekRemindersPostponed;
-@property NSArray *ekRemindersTomorrow;
-@property NSArray *ekRemindersAfterTomorrow;
-
 @property NSArray *itemsPostponed;
 @property NSArray *itemsTomorrow;
 @property NSArray *itemsAfterTomorrow;
+@property NSArray *itemsAfterTomorrowMore;
 
 @property (readonly) NSString *postponedItemsCountText;
 

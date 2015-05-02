@@ -13,6 +13,8 @@
 
 @property (readonly) NSMutableDictionary *map;
 
+@property NSArray *ekReminders;
+
 @end
 
 @implementation PZRemindersList

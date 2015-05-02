@@ -18,6 +18,7 @@
 @property NSArray *itemsPostponed;
 @property NSArray *itemsTomorrow;
 @property NSArray *itemsAfterTomorrow;
+@property NSArray *itemsAfterTomorrowMore;
 
 @end
 
@@ -53,6 +54,7 @@
             self.itemsPostponed = [self.remindersLater.itemsPostponed copy];
             self.itemsTomorrow = [self.remindersLater.itemsTomorrow copy];
             self.itemsAfterTomorrow = [self.remindersLater.itemsAfterTomorrow copy];
+            self.itemsAfterTomorrowMore = [self.remindersLater.itemsAfterTomorrowMore copy];
         }
 
         [self.tableView reloadData];
@@ -63,7 +65,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -89,6 +91,12 @@
         {
             sectionTitle = [self titleForSection:PZDataListItemsSectionTypeAfterTomorrow];
             count = (int)self.itemsAfterTomorrow.count;
+        }
+
+        if (section == 3)
+        {
+            sectionTitle = [self titleForSection:PZDataListItemsSectionTypeAfterTomorrowMore];
+            count = (int)self.itemsAfterTomorrowMore.count;
         }
     }
     
@@ -119,6 +127,11 @@
         if (section == 2)
         {
             return self.itemsAfterTomorrow.count;
+        }
+
+        if (section == 3)
+        {
+            return self.itemsAfterTomorrowMore.count;
         }
     }
     
@@ -162,7 +175,17 @@
                 reminderItem.isShowDateEnabled = NO;
             }
         }
-        
+
+        if (indexPath.section == 3)
+        {
+            if (row >= 0 && row <= (self.itemsAfterTomorrowMore.count - 1))
+            {
+                reminderItem = [self.itemsAfterTomorrowMore objectAtIndex:row];
+
+                reminderItem.isShowDateEnabled = YES;
+            }
+        }
+
         return reminderItem;
     }
 }
@@ -206,6 +229,11 @@
         if (reminderCell.indexPath.section == 2)
         {
             self.itemsAfterTomorrow = [self removeItemFromArray:self.itemsAfterTomorrow atIndex:reminderCell.indexPath.row];
+        }
+
+        if (reminderCell.indexPath.section == 3)
+        {
+            self.itemsAfterTomorrowMore = [self removeItemFromArray:self.itemsAfterTomorrowMore atIndex:reminderCell.indexPath.row];
         }
     }
     

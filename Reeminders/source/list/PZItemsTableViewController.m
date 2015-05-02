@@ -147,6 +147,8 @@
             return @"TOMORROW";
         case PZDataListItemsSectionTypeAfterTomorrow:
             return [self afterTomorrowDateText];
+        case PZDataListItemsSectionTypeAfterTomorrowMore:
+            return @"LATER";
         case PZDataListItemsSectionTypeAllTags:
             return @"ALL TAGS";
         case PZDataListItemsSectionTypeAllTagReminders:

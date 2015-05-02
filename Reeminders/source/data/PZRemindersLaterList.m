@@ -13,6 +13,11 @@
 
 @property (readonly) NSMutableDictionary *map;
 
+@property NSArray *ekRemindersPostponed;
+@property NSArray *ekRemindersTomorrow;
+@property NSArray *ekRemindersAfterTomorrow;
+@property NSArray *ekRemindersAfterTomorrowMore;
+
 @end
 
 @implementation PZRemindersLaterList
@@ -20,6 +25,7 @@
     NSArray *_ekRemindersPostponed;
     NSArray *_ekRemindersTomorrow;
     NSArray *_ekRemindersAfterTomorrow;
+    NSArray *_ekRemindersAfterTomorrowMore;
 }
 
 - (instancetype)init
@@ -98,6 +104,23 @@
     NSLog(@"[PZRemindersLaterList] ekRemindersAfterTomorrow set (%li)", (long)self.itemsAfterTomorrow.count);
 }
 
+- (NSArray *)ekRemindersAfterTomorrowMore
+{
+    return self->_ekRemindersAfterTomorrowMore;
+}
+
+- (void)setEkRemindersAfterTomorrowMore:(NSArray *)ekRemindersAfterTomorrowMore
+{
+    self->_ekRemindersAfterTomorrowMore = ekRemindersAfterTomorrowMore;
+
+    @synchronized(self)
+    {
+        self.itemsAfterTomorrowMore = [self map:self.map reminderItemsFromEkReminders:ekRemindersAfterTomorrowMore];
+    }
+
+    NSLog(@"[PZRemindersLaterList] ekRemindersAfterTomorrowMore set (%li)", (long)self.itemsAfterTomorrowMore.count);
+}
+
 - (void)fetchRemindersLater:(PZItemsFetchCompletionBlock)completionBlock
 {
     NSDate *firstDate = [NSDate dateWithTimeIntervalSinceReferenceDate:0];
@@ -106,10 +129,12 @@
     NSDate *tomorrowDate = [self nowDateWithDayOffset:1];
     NSDate *afterTomorrowDate = [self nowDateWithDayOffset:2];
     NSDate *afterTomorrowPlusOneDate = [self nowDateWithDayOffset:3];
+    NSDate *afterTomorrowMore = [self nowDateWithDayOffset:365];
 
     NSPredicate *predicatePostponed = [self.eventStore predicateForIncompleteRemindersWithDueDateStarting:firstDate ending:todayDate calendars:nil];
     NSPredicate *predicateTomorrow = [self.eventStore predicateForIncompleteRemindersWithDueDateStarting:tomorrowDate ending:afterTomorrowDate calendars:nil];
     NSPredicate *predicateAfterTomorrow = [self.eventStore predicateForIncompleteRemindersWithDueDateStarting:afterTomorrowDate ending:afterTomorrowPlusOneDate calendars:nil];
+    NSPredicate *predicateAfterTomorrowMore = [self.eventStore predicateForIncompleteRemindersWithDueDateStarting:afterTomorrowPlusOneDate ending:afterTomorrowMore calendars:nil];
 
     [self.eventStore fetchRemindersMatchingPredicate:predicatePostponed completion:^(NSArray *reminders)
     {
@@ -123,10 +148,15 @@
             {
                 self.ekRemindersAfterTomorrow = reminders;
 
-                dispatch_async(dispatch_get_main_queue (), ^(void)
+                [self.eventStore fetchRemindersMatchingPredicate:predicateAfterTomorrowMore completion:^(NSArray *reminders)
                 {
-                    completionBlock();
-                });
+                    self.ekRemindersAfterTomorrowMore = reminders;
+
+                    dispatch_async(dispatch_get_main_queue (), ^(void)
+                    {
+                        completionBlock();
+                    });
+                }];
             }];
         }];
     }];

@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, PZDataListItemsSectionType)
     PZDataListItemsSectionTypePostponed,
     PZDataListItemsSectionTypeTomorrow,
     PZDataListItemsSectionTypeAfterTomorrow,
+    PZDataListItemsSectionTypeAfterTomorrowMore,
     PZDataListItemsSectionTypeAllTags,
     PZDataListItemsSectionTypeAllTagReminders,
 };

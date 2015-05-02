@@ -13,6 +13,9 @@
 
 @property (readonly) NSMutableDictionary *map;
 
+@property NSArray *ekRemindersToDo;
+@property NSArray *ekRemindersDone;
+
 @end
 
 @implementation PZRemindersTodayList
